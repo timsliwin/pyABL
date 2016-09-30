@@ -29,14 +29,17 @@ class wrfles(object):
 
         """Lists wrfout files included in wrfles object file list"""
 
-        for li in self._filelist:
-	    print li.split("/")[-1]
+	files = list(li.split("/")[-1] for li in self._filelist)
+
+        print files
+	return files
 
 
 
 if __name__ == "__main__":
 
     wrfles1 = wrfles("/lustre/scratch/tsliwins/L09KM/DX012AR1")
+    wrfles1.list()
     wrfles2 = wrfles("/lustre/scratch/tsliwins/L09KM/DX012AR1/")
-    wrfles3 = wrfles("/lustre/scratch/tsliwins/L09KM/")
+    #wrfles3 = wrfles("/lustre/scratch/tsliwins/L09KM/")
 
