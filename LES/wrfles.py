@@ -2,24 +2,41 @@ import numpy as np
 import netCDF4 as nc
 import glob
 
-class WrfLES(object):
+_wrfoutString = "wrfout_d*"
+
+class wrfles(object):
 
     def __init__(self,wrfoutDir):
 
-	self.wrfoutDir = wrfoutDir
+	"""Generate new wrfles object and populate it with paths to wrfout files
+           to be used"""
 
-	if self.wrfoutDir[-1] == '/':
-	    self.filelist = glob.glob(self.wrfoutDir+"wrfout*")
+        # wrfoutDir is expected to be full path from root directory to directory 
+        # containing wrfout files
+	self._wrfoutDir = wrfoutDir
+
+	# user check: cover if user specifies directory with ending slash or not
+	if self._wrfoutDir[-1] == '/':
+	    self._filelist = sorted(glob.glob(self._wrfoutDir+_wrfoutString))
 	else:
-	    self.filelist = glob.glob(self.wrfoutDir+"/wrfout*")
-	    
-	print self.filelist
+	    self._filelist = sorted(glob.glob(self._wrfoutDir+"/"+_wrfoutString))
 
-	if len(self.filelist) < 1:
+	# if no wrfout files located, raise IOError to alert user.
+	if len(self._filelist) < 1:
 	    raise IOError("No WRF output files located in specified directory.")
+
+    def list(self):
+
+        """Lists wrfout files included in wrfles object file list"""
+
+        for li in self._filelist:
+	    print li.split("/")[-1]
+
+
 
 if __name__ == "__main__":
 
-    wrfles1 = WrfLES("/lustre/scratch/tsliwins/L09KM/DX012AR1")
-    wrfles2 = WrfLES("/lustre/scratch/tsliwins/L09KM/DX012AR1/")
-    wrfles3 = WrfLES("/lustre/scratch/tsliwins/L09KM/")
+    wrfles1 = wrfles("/lustre/scratch/tsliwins/L09KM/DX012AR1")
+    wrfles2 = wrfles("/lustre/scratch/tsliwins/L09KM/DX012AR1/")
+    wrfles3 = wrfles("/lustre/scratch/tsliwins/L09KM/")
+
